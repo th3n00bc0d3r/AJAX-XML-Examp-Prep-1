@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>My Test Prep Server</title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    </head>
+
+    <body>
+        <b>Welcome to the Noob Test 1</b>
+        <br>
+
+        <button id="btnGet">AJAX Test: Get</button>
+        <button id="btnPost">AJAX Test: Post</button>
+    </body>
+
+    <script type="text/javascript">
+        var xmlHttpRequest = null;
+
+        // Initialize xmlHttpRequest object when document is ready.
+        $(document).ready(function () {
+            // Define XMLHttpRequest object for Mozilla and Safari that is not IE compatible.
+            if(window.XMLHttpRequest){
+                xmlHttpRequest = new XMLHttpRequest();
+            }else{
+                // Create IE XMLHttpRequest object.
+                if(window.ActiveXObject){
+                    try{
+                        xmlHttpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                    }catch(exception)
+                    {
+                        try{
+                            xmlHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                        }catch(exception)
+                        {
+                            console.log(exception.toString());
+                        }
+                    }
+                }
+            }
+        });
+            
+        $(function() {
+            $('#btnGet').click(function(e) {
+                //Open the DAMN request
+                xmlHttpRequest.open("get","http://localhost:3000/list", true);
+
+                //xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
+
+                // When Response State is Ready
+                xmlHttpRequest.onreadystatechange = function() {
+                    if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
+                        var data = JSON.parse(xmlHttpRequest.responseText);
+                        console.log(data);
+                    }
+                };
+
+                //Send Request
+                xmlHttpRequest.send("");
+            });
+
+            $('#btnPost').click(function(e) {
+
+                xmlHttpRequest.open("POST", "http://localhost:3000/list/add", false);
+                xmlHttpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                var data_object = {
+                    "hello": "1",
+                    "world": "2"
+                };
+
+                data_object = JSON.stringify(data_object);
+                xmlHttpRequest.send(data_object);
+
+                console.log(xmlHttpRequest.responseText);
+            });
+        });
+    </script>
+
+</html>
